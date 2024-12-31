@@ -9,7 +9,7 @@ export const asyncHandler = (fn: any) => async (req: any, res: any, next: any) =
   }
 };
 
-export const successResponse = (statusCode: number, data: any, message = "Request successful") => {
+export const successResponse = (statusCode: number, message = "Request successful", data: any) => {
   logger.info(`RESPONSE: ${statusCode} ${message}`);
   // logger.success(`RESPONSE: ${statusCode} ${message}`);
   return {
