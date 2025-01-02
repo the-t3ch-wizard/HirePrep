@@ -3,9 +3,14 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { Button } from './components/ui/button'
+import { useAppDispatch } from './lib/store/hooks/hooks'
+import { useAppSelector } from './lib/store/hooks/hooks'
+import { increment } from './lib/store/features/counter/counterSlice'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const dispatch = useAppDispatch()
+  
+  const count = useAppSelector((state) => state.counter.value)
 
   return (
     <>
@@ -19,7 +24,7 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <Button onClick={() => setCount((count) => count + 1)}>
+        <Button onClick={() => dispatch(increment())}>
           count is {count}
         </Button>
         <p>
