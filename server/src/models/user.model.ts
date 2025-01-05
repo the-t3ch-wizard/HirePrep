@@ -1,7 +1,7 @@
-import { Schema, model } from "mongoose";
+import { Schema } from "mongoose";
 import bcrypt from "bcrypt";
 
-// const User = model("User", userSchema);
+// const User = model("User", userSchema)
 
 export const userSchema = new Schema({
   name: { 
@@ -17,9 +17,10 @@ export const userSchema = new Schema({
   password: { 
     type: String,
     minlength: 6,
-    maxlength: 8,
     required: true
   },
+}, {
+  timestamps: true,
 })
 
 userSchema.pre("save", async function(next) {

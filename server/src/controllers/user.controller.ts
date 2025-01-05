@@ -35,9 +35,8 @@ const signup = async (req : Request, res : Response) => {
   }, env.JWTSECRETKEY, {
     expiresIn: "7d"
   })
-  res.cookie("authToken", token, {
-    httpOnly: true,
-  })
+  res.cookie("authToken", token)
+  // had to set options for token as per mode of server
 
   return res.status(200).json(successResponse(200, "User signed up successfully", {
     id: newUser._id,
@@ -75,9 +74,8 @@ const login = async (req : Request, res : Response) => {
   }, env.JWTSECRETKEY, {
     expiresIn: "7d"
   })
-  res.cookie("authToken", token, {
-    httpOnly: true,
-  })
+  res.cookie("authToken", token)
+  // had to set options for token as per mode of server
 
   return res.status(200).json(successResponse(200, "User logged in successfully", {
     id: userFound._id,
@@ -95,12 +93,13 @@ const whoAmI = async (req : Request, res: Response) => {
     return res.status(401).json(errorResponse(401, "No token provided"))
   }
 
+  // 
   const decoded : any = jwt.verify(authToken, env.JWTSECRETKEY)
-  console.log('OK: ', decoded)
   if (!decoded){
     return res.status(401).json(errorResponse(401, "Invalid token"))
   }
   
+  // 
   const User = model("User", userSchema)
   const existingUser = await User.findOne({
     _id: decoded?.id
@@ -119,9 +118,8 @@ const whoAmI = async (req : Request, res: Response) => {
 const logout = async (req : Request, res : Response) => {
   logger.info("Logout user")
 
-  res.clearCookie("authToken", {
-    httpOnly: true,
-  })
+  res.clearCookie("authToken")
+  // had to set options for token as per mode of server
 
   return res.status(200).json(successResponse(200, "User logged out successfully", null))
 }
