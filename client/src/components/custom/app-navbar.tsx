@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { AppSignup } from './app-signup';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuContent, DropdownMenuItem } from '../ui/dropdown-menu';
 import { logout } from '@/services/user';
+import { Link } from 'react-router-dom';
 
 export const AppNavbar = () => {
 
