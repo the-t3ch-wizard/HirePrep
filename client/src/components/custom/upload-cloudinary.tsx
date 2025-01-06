@@ -68,7 +68,7 @@ export const UploadCloudinary = () => {
     <div className='w-full min-h-[80vh] flex flex-col justify-center items-center gap-2'>
 
       <div className="flex w-[30rem] justify-center items-center gap-2">
-        <Input id="picture" type="file" accept="image/*" multiple={false} onChange={handleFileChange} className='w-[75%]' />
+        <Input id="picture" type="file" accept="image/*" multiple={false} required disabled={isLoading} onChange={handleFileChange} className='w-[75%]' />
         <Button className='w-[25%]' onClick={handleUpload} disabled={isLoading}>
           {
             isLoading ? <LoaderCircle className='animate-spin' /> : 'Upload'
