@@ -2,6 +2,8 @@ import { Router } from "express";
 import { asyncHandler } from "../lib/utils";
 import { user } from "../controllers/user.controller";
 import { upload } from "./upload/upload.routes";
+import conversationRoutes from "./conversation/conversation.routes";
+import resumeRoutes from "./resume/resume.routes";
 
 const router = Router();
 
@@ -11,10 +13,10 @@ router.put("/auth/logout", asyncHandler(user.logout))
 router.get("/auth/who-am-i", asyncHandler(user.whoAmI))
 
 // conversation routes
-router.use("/upload", upload)
+// router.use("/upload", upload)
 
-router.use("/resume", )
-router.use("/chat", )
-router.use("/conversation", )
+router.use("/resume", resumeRoutes)
+// router.use("/chat", )
+router.use("/conversation", conversationRoutes)
 
 export default router;

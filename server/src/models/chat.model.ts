@@ -1,6 +1,4 @@
-import { Schema } from "mongoose";
-
-// const Chat = model("Chat", chatSchema)
+import { model, Schema } from "mongoose";
 
 export const chatSchema = new Schema({
   sender: {
@@ -12,11 +10,8 @@ export const chatSchema = new Schema({
     type: String,
     required: true,
   },
-  conversationId: {
-    type: Schema.Types.ObjectId,
-    ref: "Conversation",
-    required: true,
-  }
 }, {
   timestamps: true
 })
+
+export const Chat = model("Chat", chatSchema)

@@ -49,10 +49,10 @@ export const UploadCloudinary = () => {
       fileData.append('cloud_name',  env.CLOUDINARY_CLOUD_NAME);
       const response = await uploadImage(fileData);
       const data = await response.data;
+      console.log('FINAL DATA:', myCld.image(data.public_id))
       dispatch(setNewChatUploadedResumeDetail({
         publicId: data.public_id,
         imageUrl: data.secure_url,
-        image: myCld.image(data.public_id),
       }));
       toast.success('Image uploaded successfully');
     } catch (error: any) {
@@ -65,10 +65,11 @@ export const UploadCloudinary = () => {
   }
 
   return (
-    <div className='w-full min-h-[80vh] flex flex-col justify-center items-center gap-2'>
+    <div className='w-full min-h-[78vh] flex flex-col justify-center items-center gap-2'>
 
       <div className="flex w-[30rem] justify-center items-center gap-2">
         <Input id="picture" type="file" accept="image/*" multiple={false} required disabled={isLoading} onChange={handleFileChange} className='w-[75%]' />
+        {/* can provide text while uploading to make waiting more user friendly */}
         <Button className='w-[25%]' onClick={handleUpload} disabled={isLoading}>
           {
             isLoading ? <LoaderCircle className='animate-spin' /> : 'Upload'

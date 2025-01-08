@@ -5,7 +5,6 @@ const initialState = {
     UploadedResumeDetail: {
       publicId: '',
       imageUrl: '',
-      image: null,
     },
   }
 }
