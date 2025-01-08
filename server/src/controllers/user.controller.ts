@@ -6,13 +6,12 @@ import { errorResponse, successResponse } from "../lib/utils"
 import { env } from "../config/env";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
+import {User} from "../models/user.model"
 
 const signup = async (req : Request, res : Response) => {
   logger.info("Signup user")
 
   const {name, email, password} = req.body;
-
-  const User = model("User", userSchema);
 
   // 
   const existingUser = await User.findOne({
@@ -48,9 +47,7 @@ const signup = async (req : Request, res : Response) => {
 const login = async (req : Request, res : Response) => {
   logger.info("Login user")
 
-  const {email, password} = req.body;
-
-  const User = model("User", userSchema);
+  const {email, password} = req.body;  
 
   // 
   let userFound = await User.findOne({
@@ -100,7 +97,6 @@ const whoAmI = async (req : Request, res: Response) => {
   }
   
   // 
-  const User = model("User", userSchema)
   const existingUser = await User.findOne({
     _id: decoded?.id
   })

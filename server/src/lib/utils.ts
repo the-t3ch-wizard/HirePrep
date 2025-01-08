@@ -1,4 +1,7 @@
+import axios from "axios";
 import { logger } from "./logger";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { env } from "../config/env";
 
 export const asyncHandler = (fn: any) => async (req: any, res: any, next: any) => {
   try {
@@ -36,3 +39,38 @@ export const errorHandler = (err: any, req: any, res: any, next: any) => {
 
   res.status(500).json(errorResponse(500, "Internal Server Error"));
 };
+
+export const convertFileUrlToBase64 = async (fileUrl: string) => {
+  const response = await axios.get(fileUrl, { responseType: 'arraybuffer' }); // Fetch the file as an array buffer
+  const base64 = Buffer.from(response.data).toString('base64'); // Convert to Base64
+  return base64;
+}
+
+export const extractResumeContentUsingGemini = async (resumeUrl: string) => {
+  
+  const base64 = await convertFileUrlToBase64(resumeUrl);
+    
+  const filePart = {
+    inlineData: {
+      data: base64,
+      mimeType: "image/jpeg",
+    },
+  };
+  
+  const genAI = new GoogleGenerativeAI(env.GOOGLE_GENAI_API_KEY);
+  const model = genAI.getGenerativeModel({ 
+    model: "gemini-1.5-flash",
+    systemInstruction: "You are a resume content generator, who extracts the content of a resume into text. All information in the resume must be provided."
+  });
+
+  const prompt = "Extract the content of the provided resume";
+  
+  const result = await model.generateContent([
+    prompt,
+    filePart
+  ]);
+
+  const extractedContent = result.response.text();
+  
+  return extractedContent;
+}

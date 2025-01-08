@@ -35,7 +35,10 @@ export const HomeLayout = () => {
         <SidebarInset>
           
           <AppNavbar />
-          <Toaster />
+          <Toaster
+            richColors={true}
+            closeButton={true}
+          />
           
           <Outlet />
 

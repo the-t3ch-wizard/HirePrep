@@ -15,71 +15,80 @@ import { ChevronDown, ChevronRight, Home, Info, MessageSquareText, MessageSquare
 import { ModeToggle } from "./mode-toggle"
 import { Link } from "react-router-dom"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useAppSelector } from "@/lib/store/hooks/hooks"
 
-// Menu items.
-// This has to be dynamic rendered from backend based on user permissions
-const items = [
-  {
+export function AppSidebar() {
+
+  const loggedInStatus = useAppSelector((state) => state.user.loggedInStatus);
+
+  
+  // Menu menuItems.
+  // This has to be dynamic rendered from backend based on user permissions
+  const [menuItems, setMenuItems] = useState([{
     title: "Home",
     url: "/",
     icon: Home,
-  },
-  {
-    title: "New Conversation",
-    url: "/c",
-    icon: MessageSquareText,
-  },
-  {
-    title: "Conversations",
-    url: "/c",
-    icon: MessagesSquare,
-  },
-  {
+  }, {
     title: "About us",
     url: "/about-us",
     icon: Info,
-  },
-  {
+  }, {
     title: "Contact us",
     url: "/contact-us",
     icon: MessageSquareWarning,
-  },
-  // {
-  //   title: "Calendar",
-  //   url: "#",
-  //   icon: Calendar,
-  // },
-  // {
-  //   title: "Search",
-  //   url: "#",
-  //   icon: Search,
-  // },
-  // {
-  //   title: "Settings",
-  //   url: "#",
-  //   icon: Settings,
-  // },
-]
+  }]);
 
-// Conversations
-// This has to be dynamic rendered from backend based on user's conversations
-const conversations = [
-  {
-    title: "1",
-    url: "/c/1",
-  },
-  {
-    title: "2",
-    url: "/c/2",
-  },
-  {
-    title: "3",
-    url: "/c/3",
-  }
-]
+  // Conversations
+  // TODO: initial it should be an empty array
+  // This has to be dynamic rendered from backend based on user's conversations
+  const [conversations, setConversations] = useState([
+    {
+      title: "1",
+      url: "/c/1",
+    },
+    {
+      title: "2",
+      url: "/c/2",
+    },
+    {
+      title: "3",
+      url: "/c/3",
+    }
+  ])
 
-export function AppSidebar() {
+  useEffect(() => {
+    if (loggedInStatus){
+      setMenuItems([
+        {
+          title: "Home",
+          url: "/",
+          icon: Home,
+        },
+        {
+          title: "New Conversation",
+          url: "/c",
+          icon: MessageSquareText,
+        },
+        {
+          title: "Conversations",
+          url: "/c",
+          icon: MessagesSquare,
+        },
+        {
+          title: "About us",
+          url: "/about-us",
+          icon: Info,
+        },
+        {
+          title: "Contact us",
+          url: "/contact-us",
+          icon: MessageSquareWarning,
+        },
+      ])
+      // get user's conversation from db and setConversations
+    }
+  }, [loggedInStatus])
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -94,14 +103,14 @@ export function AppSidebar() {
 
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => {
+              {menuItems.map((item) => {
                 if (item.title === "Conversations"){
                   return (<Collapsible open={isOpen} onOpenChange={setIsOpen} className="group/collapsible">
                     <SidebarMenuItem>
                       <CollapsibleTrigger asChild>
                         <SidebarMenuButton>
                           <item.icon />
-                          <span className="w-full flex justify-between items-center">
+                          <span className="w-full flex justify-between menuItems-center">
                             {item.title}
                             <ChevronRight className={`w-4 h-4 transition-all duration-200 ${isOpen ? "rotate-90" : ""}`} />
                           </span>
@@ -140,7 +149,7 @@ export function AppSidebar() {
 
       <SidebarFooter>
           <SidebarMenu>
-            <SidebarMenuItem className="p-2 flex justify-start items-center">
+            <SidebarMenuItem className="p-2 flex justify-start menuItems-center">
               <ModeToggle />
             </SidebarMenuItem>
           </SidebarMenu>

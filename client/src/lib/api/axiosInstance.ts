@@ -5,7 +5,7 @@ const apiUrl = env.API_URL;
 
 export const axiosInstance = axios.create({
   baseURL: apiUrl || "http://localhost:7000/api/v1/",
-  timeout: 10000,
+  timeout: 15000,
   headers: {
     "Content-Type": "application/json",
   },

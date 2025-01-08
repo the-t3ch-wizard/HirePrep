@@ -1,10 +1,9 @@
-import { Schema } from "mongoose";
-
-// const Resume = model("Resume", resumeSchema)
+import { model, Schema } from "mongoose";
 
 export const resumeSchema = new Schema({
   resumeUrl: {
     type: String,
+    // unique: true,
     required: true,
   },
   content: {
@@ -13,3 +12,5 @@ export const resumeSchema = new Schema({
 }, {
   timestamps: true,
 })
+
+export const Resume = model("Resume", resumeSchema)

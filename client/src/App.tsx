@@ -5,17 +5,28 @@ import { Conversations } from './app/c/Conversations'
 import { Conversation } from './app/c/id/Conversation'
 import { AboutUs } from './app/about-us/AboutUs'
 import { ContactUs } from './app/contact-us/ContactUs'
+import { useAppSelector } from './lib/store/hooks/hooks'
+import { NotFound } from './app/404-not-found/NotFound'
 
 function App() {
+
+  const loggedInStatus = useAppSelector((state) => state.user.loggedInStatus)
 
   return (
     <Routes>
       <Route path="/" element={<HomeLayout />} >
         <Route path="" element={<Home />} />
-        <Route path="c" element={<Conversations />} />
-        <Route path="c/:id" element={<Conversation />} />
-        <Route path="about-us" element={<AboutUs />} />
-        <Route path="contact-us" element={<ContactUs />} />
+        {
+          loggedInStatus ?
+          <>
+            <Route path="c" element={<Conversations />} />
+            <Route path="c/:id" element={<Conversation />} />
+            <Route path="about-us" element={<AboutUs />} />
+            <Route path="contact-us" element={<ContactUs />} />
+          </> :
+          null
+        }
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   )

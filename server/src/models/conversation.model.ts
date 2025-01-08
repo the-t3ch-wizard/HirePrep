@@ -1,6 +1,4 @@
-import { Schema } from "mongoose";
-
-// const Conversation = model("Conversation", conversationSchema)
+import { model, Schema } from "mongoose";
 
 export const conversationSchema = new Schema({
   userId: {
@@ -30,3 +28,5 @@ export const conversationSchema = new Schema({
 }, {
   timestamps: true,
 })
+
+export const Conversation = model("Conversation", conversationSchema)

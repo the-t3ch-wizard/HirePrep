@@ -12,15 +12,14 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { uploadImage } from '@/services/cloudinary';
 import { LoaderCircle } from 'lucide-react';
+import { setNewChatUploadedResumeDetail } from '@/lib/store/features/conversation/consersationSlice';
+import { useAppDispatch, useAppSelector } from '@/lib/store/hooks/hooks';
 
 export const UploadCloudinary = () => {
 
-  const [publicId, setPublicId] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const dispatch = useAppDispatch();
 
   const myCld = new Cloudinary({ cloud: { cloudName: env.CLOUDINARY_CLOUD_NAME } });
-
-  const [image, setImage] = useState<CloudinaryImage | null>(null);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -50,13 +49,15 @@ export const UploadCloudinary = () => {
       fileData.append('cloud_name',  env.CLOUDINARY_CLOUD_NAME);
       const response = await uploadImage(fileData);
       const data = await response.data;
-      setImageUrl(data.secure_url);
-      setPublicId(data.public_id);
-      setImage(myCld.image(data.public_id));
+      console.log('FINAL DATA:', myCld.image(data.public_id))
+      dispatch(setNewChatUploadedResumeDetail({
+        publicId: data.public_id,
+        imageUrl: data.secure_url,
+      }));
       toast.success('Image uploaded successfully');
     } catch (error: any) {
       console.log(error);
-      return toast.error(error?.response?.data?.error?.message || error?.message || 'Unable to upload image');
+      toast.error(error?.response?.data?.error?.message || error?.message || 'Unable to upload image');
     } finally {
       setIsLoading(false);
     }
@@ -64,26 +65,17 @@ export const UploadCloudinary = () => {
   }
 
   return (
-    <div className='flex flex-col justify-center items-center gap-2'>
+    <div className='w-full min-h-[78vh] flex flex-col justify-center items-center gap-2'>
 
       <div className="flex w-[30rem] justify-center items-center gap-2">
-        <Input id="picture" type="file" accept="image/*" multiple={false} onChange={handleFileChange} className='w-[75%]' />
+        <Input id="picture" type="file" accept="image/*" multiple={false} required disabled={isLoading} onChange={handleFileChange} className='w-[75%]' />
+        {/* can provide text while uploading to make waiting more user friendly */}
         <Button className='w-[25%]' onClick={handleUpload} disabled={isLoading}>
           {
             isLoading ? <LoaderCircle className='animate-spin' /> : 'Upload'
           }
         </Button>
       </div>
-
-      {/* {
-        image && 
-        (<div className='h-[25rem] flex justify-center items-center'>
-          <AdvancedImage
-            cldImg={image}
-            plugins={[lazyload(), responsive(), placeholder()]}
-          />
-        </div>)
-      } */}
 
     </div>
   )
