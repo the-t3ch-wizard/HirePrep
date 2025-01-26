@@ -9,7 +9,7 @@ interface MessageProps {
   content?: string;
   feedback?: boolean;
   goodFeedbackHandler?: (e: any) => any;
-  role: "model" | "user" | "assistant";
+  role: "model" | "user" | "assistant" | "ai";
   stream?: boolean;
 }
 
@@ -18,7 +18,6 @@ export const Message = ({ content = "", feedback = false, goodFeedbackHandler, r
   const [displayedContent, setDisplayedContent] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [feedbackPopup, setFeedbackPopup] = useState(feedback);
-
   
   useEffect(() => {
     // DELETE THIS
@@ -43,7 +42,7 @@ export const Message = ({ content = "", feedback = false, goodFeedbackHandler, r
     <div className="w-full flex justify-start items-start p-2 px-20">
       
       {
-        role === "model" ?
+        role === "model" || role === "ai" ?
         <>
           <div className="flex items-center w-[5%] p-2">
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-100 to-orange-700 shadow-2xl">
@@ -51,7 +50,7 @@ export const Message = ({ content = "", feedback = false, goodFeedbackHandler, r
             </div>
           </div>
           <pre className="w-[95%]">
-            <Card>
+            <Card className="rounded-md">
               <ReactMarkdown className="p-5 text-wrap">
                 {displayedContent}
               </ReactMarkdown>
@@ -62,7 +61,7 @@ export const Message = ({ content = "", feedback = false, goodFeedbackHandler, r
 
                 <p className="flex justify-center items-center">
                   Please provide feedback, to 
-                  <span className="bg-primary px-2 mx-2 rounded-lg">Continue {`=>`}</span>
+                  <span className="bg-primary text-secondary px-2 mx-2 rounded-lg">Continue {`=>`}</span>
                 </p>
                 
                 <div className="flex justify-center items-center gap-2">

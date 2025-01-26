@@ -20,13 +20,27 @@ export const conversationSchema = new Schema({
     type: String,
     default: '',
   },
+  chats: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Chat",
+    }
+  ],
   lastChatId: {
     type: Schema.Types.ObjectId,
     ref: "Chat",
     required: true,
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false,
   }
 }, {
   timestamps: true,
+})
+
+conversationSchema.pre("save", async function (next) {
+  this.name = `Conversation ${String(Date.now())} ${this.userId}`
 })
 
 export const Conversation = model("Conversation", conversationSchema)

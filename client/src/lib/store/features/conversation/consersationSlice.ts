@@ -6,6 +6,19 @@ const initialState = {
       publicId: '',
       imageUrl: '',
     },
+  },
+  currentConversation: {
+    id: '',
+    name: '',
+    resumeId: '',
+    chats: [
+      /*
+      {
+        sender: "user" || "model",
+        text: ""
+      }
+      */
+    ]
   }
 }
 
@@ -19,9 +32,18 @@ export const conversationSlice = createSlice({
     clearNewChatUploadedResumeDetail: (state) => {
       state.newChat.UploadedResumeDetail = initialState.newChat.UploadedResumeDetail
     },
+    setCurrentConversation: (state, action) => {
+      state.currentConversation = action.payload
+    },
+    clearCurrentConversation: (state) => {
+      state.currentConversation = initialState.currentConversation
+    },
+    setCurrentConversationChats: (state, action) => {
+      state.currentConversation.chats = action.payload
+    },
   }
 })
 
-export const { setNewChatUploadedResumeDetail, clearNewChatUploadedResumeDetail } = conversationSlice.actions;
+export const { setNewChatUploadedResumeDetail, clearNewChatUploadedResumeDetail, setCurrentConversation, clearCurrentConversation, setCurrentConversationChats } = conversationSlice.actions;
 
 export default conversationSlice.reducer;

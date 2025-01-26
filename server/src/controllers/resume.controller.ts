@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
+import { Req, Res } from "./../types/types";
 import { logger } from "../lib/logger"
 import { errorResponse, extractResumeContentUsingGemini, successResponse } from "../lib/utils"
 import { Resume } from "../models/resume.model";
 
-const extractAndCreateResume = async (req: Request, res: Response) => {
+const extractAndCreateResume = async (req: Req, res: Res) => {
   logger.info("Extract and create resume")
 
   const { resumeUrl } = req.body;

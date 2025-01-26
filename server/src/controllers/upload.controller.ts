@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
+import { Req, Res } from "./../types/types";
 import { logger } from "../lib/logger";
 import { v2 as cloudinary } from 'cloudinary';
 import { env } from "../config/env";
 
-const uploadImage = async (req: Request, res: Response) => {
+const uploadImage = async (req: Req, res: Res) => {
   logger.info("Upload image")
 
   cloudinary.config({
@@ -47,7 +47,7 @@ const uploadImage = async (req: Request, res: Response) => {
   // return res
 }
 
-const getImage = async (req: Request, res: Response) => {
+const getImage = async (req: Req, res: Res) => {
 
 }
 
