@@ -1,7 +1,7 @@
 import { Message } from "@/components/custom/message";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { getConversationsChatById, startConversation } from "@/services/conversation";
+import { getConversationsChatById, continueConversation } from "@/services/conversation";
 import { messageSchema } from "@/validations/message";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -61,7 +61,7 @@ export const Conversation = () => {
         }
       });
 
-      const replyFromAi = await startConversation({
+      const replyFromAi = await continueConversation({
         conversationId: id || "",
         history: history,
         message: e.message

@@ -18,7 +18,7 @@ export const createConversation = async (payload: any) => {
   return response.data;
 }
 
-export const startConversation = async (payload: {
+export const continueConversation = async (payload: {
   conversationId: string;
   history: { role: any; parts: { text: any; }[]}[];
   message: string;

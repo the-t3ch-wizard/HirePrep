@@ -43,7 +43,7 @@ export const Conversations = () => {
     }
   }
 
-  const startConversation = async (e: any) => {
+  const continueConversation = async (e: any) => {
 
     try {
       const newConversation = await createConversation({
@@ -84,7 +84,7 @@ export const Conversations = () => {
 
       {
         resumeContent &&
-        <Message content={resumeContent} stream={true} role="model" feedback={true} goodFeedbackHandler={startConversation} />
+        <Message content={resumeContent} stream={true} role="model" feedback={true} goodFeedbackHandler={continueConversation} />
       }
 
     </div>
