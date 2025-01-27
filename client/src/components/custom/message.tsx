@@ -51,7 +51,7 @@ export const Message = ({ content = "", feedback = false, goodFeedbackHandler, r
           </div>
           <pre className="w-[95%]">
             <Card className="rounded-md">
-              <ReactMarkdown className="p-5 text-wrap">
+              <ReactMarkdown className="p-5 text-wrap font-geist">
                 {displayedContent}
               </ReactMarkdown>
             </Card>
@@ -79,7 +79,7 @@ export const Message = ({ content = "", feedback = false, goodFeedbackHandler, r
         <>
           <pre className="w-full">
             <Card className="bg-background border border-foreground-300 shadow-[4px_3px_0rem_0px] shadow-foreground-200">
-              <ReactMarkdown className="p-5 text-wrap">
+              <ReactMarkdown className="p-5 text-wrap font-geist">
                 {displayedContent}
               </ReactMarkdown>
             </Card>
