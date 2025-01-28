@@ -22,7 +22,7 @@ app.use(loggerMiddleware)
 
 // api to test server status
 app.get('/', asyncHandler((req: any, res: any) => {
-  return res.status(200).json(successResponse(200, "Request successful", { message: "Server is running fine" }))
+  return res.status(200).json(successResponse(200, "Req successful", { message: "Server is running fine" }))
 }))
 
 // all routes

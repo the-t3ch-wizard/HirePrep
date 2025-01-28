@@ -4,7 +4,7 @@ export const chatSchema = new Schema({
   sender: {
     type: String,
     required: true,
-    enum: ["user", "ai"]
+    enum: ["user", "model"]
   },
   text: {
     type: String,

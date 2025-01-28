@@ -11,18 +11,21 @@ import {
   SidebarMenuSub,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { ChevronDown, ChevronRight, Home, Info, MessageSquareText, MessageSquareWarning, MessagesSquare } from "lucide-react"
+import { ChevronRight, Home, Info, MessageSquareText, MessageSquareWarning, MessagesSquare, Pencil, Trash2 } from "lucide-react"
 import { ModeToggle } from "./mode-toggle"
 import { Link } from "react-router-dom"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible"
 import { useEffect, useState } from "react"
 import { useAppSelector } from "@/lib/store/hooks/hooks"
+import { getAllConversationForSideBar } from "@/services/conversation"
+import { toast } from "sonner"
+import { Button } from "../ui/button"
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@radix-ui/react-context-menu"
 
 export function AppSidebar() {
 
   const loggedInStatus = useAppSelector((state) => state.user.loggedInStatus);
 
-  
   // Menu menuItems.
   // This has to be dynamic rendered from backend based on user permissions
   const [menuItems, setMenuItems] = useState([{
@@ -39,56 +42,53 @@ export function AppSidebar() {
     icon: MessageSquareWarning,
   }]);
 
-  // Conversations
-  // TODO: initial it should be an empty array
-  // This has to be dynamic rendered from backend based on user's conversations
-  const [conversations, setConversations] = useState([
-    {
-      title: "1",
-      url: "/c/1",
-    },
-    {
-      title: "2",
-      url: "/c/2",
-    },
-    {
-      title: "3",
-      url: "/c/3",
-    }
-  ])
+  const [conversations, setConversations] = useState<[{
+    title: string;
+    url: string;
+  }]>();
 
   useEffect(() => {
     if (loggedInStatus){
-      setMenuItems([
-        {
-          title: "Home",
-          url: "/",
-          icon: Home,
-        },
-        {
-          title: "New Conversation",
-          url: "/c",
-          icon: MessageSquareText,
-        },
-        {
-          title: "Conversations",
-          url: "/c",
-          icon: MessagesSquare,
-        },
-        {
-          title: "About us",
-          url: "/about-us",
-          icon: Info,
-        },
-        {
-          title: "Contact us",
-          url: "/contact-us",
-          icon: MessageSquareWarning,
-        },
-      ])
-      // get user's conversation from db and setConversations
+      setupSidebarMenuItems();
     }
   }, [loggedInStatus])
+
+  const setupSidebarMenuItems = async () => {
+    setMenuItems([
+      {
+        title: "Home",
+        url: "/",
+        icon: Home,
+      },
+      {
+        title: "New Conversation",
+        url: "/c",
+        icon: MessageSquareText,
+      },
+      {
+        title: "Conversations",
+        url: "/c",
+        icon: MessagesSquare,
+      },
+      {
+        title: "About us",
+        url: "/about-us",
+        icon: Info,
+      },
+      {
+        title: "Contact us",
+        url: "/contact-us",
+        icon: MessageSquareWarning,
+      },
+    ])
+
+    try {
+      const conversations = await getAllConversationForSideBar();
+      setConversations(conversations.data);
+    } catch (error : any) {
+      return toast.error(error?.message || "Something went wrong!");
+    }
+  }
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -105,7 +105,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {menuItems.map((item) => {
                 if (item.title === "Conversations"){
-                  return (<Collapsible open={isOpen} onOpenChange={setIsOpen} className="group/collapsible">
+                  return (<Collapsible open={isOpen} onOpenChange={setIsOpen} className="group/collapsible" key={item.title}>
                     <SidebarMenuItem>
                       <CollapsibleTrigger asChild>
                         <SidebarMenuButton>
@@ -118,15 +118,32 @@ export function AppSidebar() {
                       </CollapsibleTrigger>
                       <CollapsibleContent>
                         {
-                          conversations.map((conversation) => {
-                            return <SidebarMenuSub>
-                              <SidebarMenuButton asChild>
-                                <Link to={conversation.url}>a
-                                  <span>{conversation.title}</span>
-                                </Link>
-                              </SidebarMenuButton>
-                            </SidebarMenuSub>
-                          })
+                          conversations && conversations.map((conversation) => {
+                            return <ContextMenu>
+                            <ContextMenuTrigger>
+                              <SidebarMenuSub key={conversation.title}>
+                                <SidebarMenuButton asChild>
+                                  <Link to={conversation.url}>
+                                    <span>{conversation.title}</span>
+                                  </Link>
+                                </SidebarMenuButton>
+                              </SidebarMenuSub>
+                            </ContextMenuTrigger>
+                            <ContextMenuContent className="bg-background rounded-md p-1 z-10">
+                              <ContextMenuItem>
+                                <Button variant={"ghost"} className="w-full " size={"sm"}>
+                                  <Pencil />
+                                  Rename
+                                </Button>
+                              </ContextMenuItem>
+                              <ContextMenuItem>
+                                <Button variant={"ghost"} className="w-full " size={"sm"}>
+                                  <Trash2 />
+                                  Delete
+                                </Button>
+                              </ContextMenuItem>
+                            </ContextMenuContent>
+                          </ContextMenu>})
                         }
                       </CollapsibleContent>
                     </SidebarMenuItem>

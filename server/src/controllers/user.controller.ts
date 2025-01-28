@@ -4,11 +4,11 @@ import { logger } from "../lib/logger"
 import { userSchema } from "../models/user.model"
 import { errorResponse, successResponse } from "../lib/utils"
 import { env } from "../config/env";
-import { Request, Response } from "express";
+import { Req, Res } from "./../types/types";
 import bcrypt from "bcrypt";
 import {User} from "../models/user.model"
 
-const signup = async (req : Request, res : Response) => {
+const signup = async (req : Req, res : Res) => {
   logger.info("Signup user")
 
   const {name, email, password} = req.body;
@@ -44,7 +44,7 @@ const signup = async (req : Request, res : Response) => {
   }))
 }
 
-const login = async (req : Request, res : Response) => {
+const login = async (req : Req, res : Res) => {
   logger.info("Login user")
 
   const {email, password} = req.body;  
@@ -81,7 +81,7 @@ const login = async (req : Request, res : Response) => {
   }))
 }
 
-const whoAmI = async (req : Request, res: Response) => {
+const whoAmI = async (req : Req, res: Res) => {
   logger.info("Who am i")
 
   const {authToken} = req.cookies;
@@ -111,7 +111,7 @@ const whoAmI = async (req : Request, res: Response) => {
   }))
 }
 
-const logout = async (req : Request, res : Response) => {
+const logout = async (req : Req, res : Res) => {
   logger.info("Logout user")
 
   res.clearCookie("authToken")

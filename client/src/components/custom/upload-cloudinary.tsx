@@ -1,10 +1,4 @@
-import { Cloudinary, CloudinaryImage } from '@cloudinary/url-gen';
-import {
-  AdvancedImage,
-  responsive,
-  lazyload,
-  placeholder
-} from '@cloudinary/react';
+import { Cloudinary } from '@cloudinary/url-gen';
 import { useState } from 'react';
 import { env } from '../../config/env';
 import { toast } from 'sonner';
@@ -13,7 +7,7 @@ import { Button } from '../ui/button';
 import { uploadImage } from '@/services/cloudinary';
 import { LoaderCircle } from 'lucide-react';
 import { setNewChatUploadedResumeDetail } from '@/lib/store/features/conversation/consersationSlice';
-import { useAppDispatch, useAppSelector } from '@/lib/store/hooks/hooks';
+import { useAppDispatch } from '@/lib/store/hooks/hooks';
 
 export const UploadCloudinary = () => {
 
@@ -49,7 +43,6 @@ export const UploadCloudinary = () => {
       fileData.append('cloud_name',  env.CLOUDINARY_CLOUD_NAME);
       const response = await uploadImage(fileData);
       const data = await response.data;
-      console.log('FINAL DATA:', myCld.image(data.public_id))
       dispatch(setNewChatUploadedResumeDetail({
         publicId: data.public_id,
         imageUrl: data.secure_url,
@@ -65,7 +58,7 @@ export const UploadCloudinary = () => {
   }
 
   return (
-    <div className='w-full min-h-[78vh] flex flex-col justify-center items-center gap-2'>
+    <div className='w-full flex flex-col justify-center items-center gap-2'>
 
       <div className="flex w-[30rem] justify-center items-center gap-2">
         <Input id="picture" type="file" accept="image/*" multiple={false} required disabled={isLoading} onChange={handleFileChange} className='w-[75%]' />
