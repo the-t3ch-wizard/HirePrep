@@ -103,9 +103,9 @@ export function AppSidebar() {
 
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => {
+              {menuItems.map((item, idx) => {
                 if (item.title === "Conversations"){
-                  return (<Collapsible open={isOpen} onOpenChange={setIsOpen} className="group/collapsible" key={item.title}>
+                  return (<Collapsible open={isOpen} onOpenChange={setIsOpen} className="group/collapsible" key={idx}>
                     <SidebarMenuItem>
                       <CollapsibleTrigger asChild>
                         <SidebarMenuButton>
@@ -119,25 +119,32 @@ export function AppSidebar() {
                       <CollapsibleContent>
                         {
                           conversations && conversations.map((conversation) => {
-                            return <ContextMenu>
-                            <ContextMenuTrigger>
-                              <SidebarMenuSub key={conversation.title}>
-                                <SidebarMenuButton asChild>
-                                  <Link to={conversation.url}>
-                                    <span>{conversation.title}</span>
+                            return <ContextMenu key={conversation.title}>
+                            <SidebarMenuSub key={conversation.title}>
+                              <SidebarMenuButton asChild className="p-0">
+                                <ContextMenuTrigger className="relative w-full h-full">
+                                  <Link to={conversation.url} className="w-full h-full p-2">
+                                    <span>{conversation.title?.slice(0, 20) + (conversation.title.length>21 ? ".." : "")}</span>
                                   </Link>
-                                </SidebarMenuButton>
-                              </SidebarMenuSub>
-                            </ContextMenuTrigger>
+                                </ContextMenuTrigger>
+                              </SidebarMenuButton>
+                            </SidebarMenuSub>
                             <ContextMenuContent className="bg-background rounded-md p-1 z-10">
                               <ContextMenuItem>
-                                <Button variant={"ghost"} className="w-full " size={"sm"}>
+                                <Button variant={"ghost"} className="w-full" size={"sm"} onClick={() => {
+                                  console.log('RENAME CLICKED', conversation)
+                                }}>
                                   <Pencil />
                                   Rename
                                 </Button>
                               </ContextMenuItem>
                               <ContextMenuItem>
-                                <Button variant={"ghost"} className="w-full " size={"sm"}>
+                                <Button variant={"ghost"} className="w-full" size={"sm"} onClick={() => {
+                                  console.log('DELETE CLICKED', conversation)
+                                  // instead of popup, it can directly delete in the worst case 
+                                  // since its will just update isDeleted to true
+                                  // and it will then deleted after 30 days (maybe using cronjob)
+                                }}>
                                   <Trash2 />
                                   Delete
                                 </Button>
@@ -149,7 +156,7 @@ export function AppSidebar() {
                     </SidebarMenuItem>
                   </Collapsible>)
                 }
-                return (<SidebarMenuItem key={item.title}>
+                return (<SidebarMenuItem key={idx}>
                   <SidebarMenuButton asChild>
                     <Link to={item.url}>
                       <item.icon />
