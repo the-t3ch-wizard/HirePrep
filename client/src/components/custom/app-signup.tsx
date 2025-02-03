@@ -56,6 +56,7 @@ export const AppSignup = () => {
     <Drawer>
 
       <DrawerTrigger>
+        {/* FIX this has to be removed from button to div inorder to avoid error */}
         <Button variant='default' className='flex justify-center items-center gap-2'>
           Sign up
         </Button>

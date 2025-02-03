@@ -11,6 +11,10 @@ const API_ENDPOINTS = {
   GET_CONVERSATION_BY_ID: "/conversation/",
   CREATE_CONVERSATION: "/conversation/create",
   CONTINUE_CONVERSATION: "/conversation/",
+  UPDATE_JOB_DETAILS: "/conversation/job-details",
+  GET_CONVERSATION_DETAILS: "/conversation/details/",
+  RENAME_CONVERSATION_TITLE: "/conversation/rename/",
+  DELETE_CONVERSATION: "/conversation/"
 };
 
 export default API_ENDPOINTS;

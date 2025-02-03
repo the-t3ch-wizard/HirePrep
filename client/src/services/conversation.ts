@@ -18,7 +18,7 @@ export const createConversation = async (payload: any) => {
   return response.data;
 }
 
-export const startConversation = async (payload: {
+export const continueConversation = async (payload: {
   conversationId: string;
   history: { role: any; parts: { text: any; }[]}[];
   message: string;
@@ -26,5 +26,34 @@ export const startConversation = async (payload: {
   const response = await axiosInstance.put(API_ENDPOINTS.CONTINUE_CONVERSATION + payload.conversationId, payload, {
     timeout: 90000,
   })
+  return response.data;
+}
+
+export const updateJobDetails = async (payload: { conversationId: string; jobTitle: string; jobDescription: string }) => {
+  const response = await axiosInstance.put(API_ENDPOINTS.UPDATE_JOB_DETAILS, payload)
+  return response.data;
+}
+
+export const getConversationDetails = async (payload: {
+  conversationId: string;
+}) => {
+  const response = await axiosInstance.get(API_ENDPOINTS.GET_CONVERSATION_DETAILS + payload.conversationId)
+  return response.data;
+}
+
+export const renameConversationNameById = async (payload: {
+  conversationId: string;
+  name: string;
+}) => {
+  const response = await axiosInstance.patch(API_ENDPOINTS.RENAME_CONVERSATION_TITLE + payload.conversationId, {
+    name: payload.name
+  });
+  return response.data;
+}
+
+export const deleteConversationById = async (payload: {
+  conversationId: string;
+}) => {
+  const response = await axiosInstance.delete(API_ENDPOINTS.DELETE_CONVERSATION + payload.conversationId);
   return response.data;
 }
