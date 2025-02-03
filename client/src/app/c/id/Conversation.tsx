@@ -10,7 +10,7 @@ import { RiSendPlaneFill } from "react-icons/ri";
 import { useParams } from "react-router-dom";
 import { z } from "zod";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks/hooks";
-import { setCurrentConversationChats } from "@/lib/store/features/conversation/consersationSlice";
+import { clearCurrentConversation, setCurrentConversation, setCurrentConversationChats } from "@/lib/store/features/conversation/consersationSlice";
 
 export const Conversation = () => {
 
@@ -24,6 +24,10 @@ export const Conversation = () => {
 
   useEffect(() => {
     listConversation(id || "");
+    // FIX clear of redux
+    return () => {
+      dispatch(clearCurrentConversation());
+    }
   }, [id])
 
   const listConversation = async (id: string) => {
@@ -33,11 +37,15 @@ export const Conversation = () => {
         const completeConversation = await getConversationsChatById({
           conversationId: id
         })
-        console.log('--', completeConversation?.data?.chats);
-        dispatch(setCurrentConversationChats(completeConversation?.data?.chats));
+        dispatch(setCurrentConversation({
+          id: completeConversation?.data?._id,
+          name: completeConversation?.data?.name,
+          resumeId: completeConversation?.data?.resumeId,
+          chats: completeConversation?.data?.chats
+        }))
       }
     } catch (error) {
-      
+      console.log(error)
     }
 
   }
@@ -84,8 +92,8 @@ export const Conversation = () => {
     <div className='w-full flex flex-col justify-start items-center p-4'>
 
       {
-        chats.map((chat: any) => {
-          return <Message content={chat.text} role={chat.sender} />
+        chats.map((chat: any, index) => {
+          return <Message content={chat.text} role={chat.sender} key={index} />
         })
       }
 

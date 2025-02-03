@@ -11,6 +11,14 @@ const initialState = {
     id: '',
     name: '',
     resumeId: '',
+    resumeUrl: '',
+    jobTitle: '',
+    jobDescription: '',
+    // aiFeedbackSummay: {
+    //   strengths: '',
+    //   areasToImprove: '',
+    //   suggestedResources: '',
+    // },
     chats: [
       /*
       {
@@ -18,7 +26,9 @@ const initialState = {
         text: ""
       }
       */
-    ]
+    ],
+    createdAt: '',
+    updatedAt: '',
   }
 }
 
@@ -32,6 +42,9 @@ export const conversationSlice = createSlice({
     clearNewChatUploadedResumeDetail: (state) => {
       state.newChat.UploadedResumeDetail = initialState.newChat.UploadedResumeDetail
     },
+    setCurrentConversationId: (state, action) => {
+      state.currentConversation.id = action.payload
+    },
     setCurrentConversation: (state, action) => {
       state.currentConversation = action.payload
     },
@@ -44,6 +57,6 @@ export const conversationSlice = createSlice({
   }
 })
 
-export const { setNewChatUploadedResumeDetail, clearNewChatUploadedResumeDetail, setCurrentConversation, clearCurrentConversation, setCurrentConversationChats } = conversationSlice.actions;
+export const { setNewChatUploadedResumeDetail, clearNewChatUploadedResumeDetail, setCurrentConversation, clearCurrentConversation, setCurrentConversationChats, setCurrentConversationId } = conversationSlice.actions;
 
 export default conversationSlice.reducer;

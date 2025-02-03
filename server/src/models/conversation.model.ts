@@ -16,6 +16,14 @@ export const conversationSchema = new Schema({
     default: "Conversation "+String(Date.now()),
     required: true,
   },
+  jobTitle: {
+    type: String,
+    trim: true,
+  },
+  jobDescription: {
+    type: String,
+    trim: true,
+  },
   aiModel: {
     type: String,
     default: '',
@@ -41,6 +49,7 @@ export const conversationSchema = new Schema({
 
 conversationSchema.pre("save", async function (next) {
   this.name = `Conversation ${String(Date.now())} ${this.userId}`
+  next();
 })
 
 export const Conversation = model("Conversation", conversationSchema)

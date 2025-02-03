@@ -7,6 +7,7 @@ import { AboutUs } from './app/about-us/AboutUs'
 import { ContactUs } from './app/contact-us/ContactUs'
 import { useAppSelector } from './lib/store/hooks/hooks'
 import { NotFound } from './app/404-not-found/NotFound'
+import { AboutConversation} from './app/c/a/id/AboutConversation'
 
 function App() {
 
@@ -19,8 +20,11 @@ function App() {
         {
           loggedInStatus ?
           <>
+            {/* c : chat */}
             <Route path="c" element={<Conversations />} />
             <Route path="c/:id" element={<Conversation />} />
+            {/* a : about */}
+            <Route path="c/a/:id" element={<AboutConversation />} />
             <Route path="about-us" element={<AboutUs />} />
             <Route path="contact-us" element={<ContactUs />} />
           </> :

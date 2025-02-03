@@ -9,10 +9,15 @@ import { toast } from 'sonner';
 import { AppSignup } from './app-signup';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuContent, DropdownMenuItem } from '../ui/dropdown-menu';
 import { logout } from '@/services/user';
+import { useEffect, useState } from 'react';
+import { Badge } from "@/components/ui/badge"
+import { Link } from 'react-router-dom';
 
 export const AppNavbar = () => {
 
   const loggedInStatus = useAppSelector((state) => state.user.loggedInStatus)
+
+  const conversationDetail = useAppSelector((state) => state.conversation.currentConversation);
 
   const {
     open,
@@ -21,7 +26,6 @@ export const AppNavbar = () => {
   const logoutHandler = async () => {
     try {
       const response = await logout();
-      console.log('res', response)
       if (response.success) window.location.reload();
     } catch (error: any) {
       console.log('error', error)
@@ -29,12 +33,30 @@ export const AppNavbar = () => {
     }
   }
 
+  const [validChatPathStatus, setValidChatPathStatus] = useState(false);
+
+  useEffect(() => {
+    if (conversationDetail.id) setValidChatPathStatus(true);
+    else setValidChatPathStatus(false);
+  }, [conversationDetail]);
+
   return (
-    <div className='w-full h-16 px-4 relative flex justify-between items-center border-b-2 border-border'>
+    <div className='w-full h-16 px-4 sticky bg-background top-0 z-50 flex justify-between items-center border-b-2 border-border'>
 
-      <SidebarTrigger />
+      <div className='flex justify-center items-center'>
+        <SidebarTrigger />
+        {
+          validChatPathStatus ?
+          <Badge className='ml-4 p-0 text-sm'>
+            <Link to={`/c/a/${conversationDetail.id}`} className='w-full px-4 text-sm rounded-md'>
+              {conversationDetail.name}
+            </Link>
+          </Badge> :
+          null
+        }
+      </div>
 
-      <div className='absolute flex justify-center items-center gap-2 top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]'>
+      <div className='absolute hidden lg:flex justify-center items-center gap-2 top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]'>
         <HiRectangleStack className='text-xl' />
         <h1 className='text-xl font-geist-800'>
           HirePrep
@@ -79,6 +101,8 @@ export const AppNavbar = () => {
               </NavigationMenuItem>
             </>
           }
+
+
 
         </NavigationMenuList>
       </NavigationMenu>
