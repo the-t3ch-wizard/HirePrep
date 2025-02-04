@@ -55,7 +55,7 @@ export const AppLogin = () => {
 
       <DrawerTrigger>
         {/* FIX this has to be removed from button to div inorder to avoid error */}
-        <Button variant='outline' className='flex justify-center items-center gap-2'>
+        <Button variant='outline' className='w-full flex justify-center items-center gap-2'>
           Log in
         </Button>
       </DrawerTrigger>
