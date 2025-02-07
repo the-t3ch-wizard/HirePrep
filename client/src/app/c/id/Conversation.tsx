@@ -1,16 +1,14 @@
 import { Message } from "@/components/custom/message";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { getConversationsChatById, continueConversation } from "@/services/conversation";
 import { messageSchema } from "@/validations/message";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { RiSendPlaneFill } from "react-icons/ri";
 import { useParams } from "react-router-dom";
 import { z } from "zod";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks/hooks";
 import { clearCurrentConversation, setCurrentConversation, setCurrentConversationChats } from "@/lib/store/features/conversation/consersationSlice";
+import { MessageInputBox } from "@/components/custom/message-inputbox";
 
 export const Conversation = () => {
 
@@ -89,7 +87,7 @@ export const Conversation = () => {
   }
 
   return (
-    <div className='w-full flex flex-col justify-start items-center p-4'>
+    <div className='w-full flex flex-col justify-start items-center px-4 pt-4'>
 
       {
         chats.map((chat: any, index) => {
@@ -99,20 +97,12 @@ export const Conversation = () => {
 
       {
         chats &&
-        <form className="w-full px-10 max-h-48 flex justify-center items-center relative" onSubmit={form.handleSubmit(onSubmit)}>
-            
-          <Textarea
-            disabled={isLoading}
-            placeholder="Ask anything related to resume"
-            className="resize-none w-full flex justify-center items-center"
-            {...form.register("message")}
-          />
-          <Button className="absolute right-14 w-10 z-10 rounded-full" aria-label="Like" type="submit">
-            <RiSendPlaneFill size={19} />
-          </Button>
-
-        </form>
+        <MessageInputBox form={form} onSubmit={onSubmit} isLoading={isLoading} />
       }
+
+      <div className="p-1 text-sm text-foreground/50">
+        AI-generated, for reference only
+      </div>
 
     </div>
   )

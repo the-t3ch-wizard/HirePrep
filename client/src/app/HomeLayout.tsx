@@ -1,5 +1,6 @@
 import { AppNavbar } from "@/components/custom/app-navbar"
 import { AppSidebar } from "@/components/custom/app-sidebar"
+import { MessageInputBox } from "@/components/custom/message-inputbox"
 import { ThemeProvider } from "@/components/custom/theme-provider"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { Toaster } from "@/components/ui/sonner"
@@ -34,7 +35,7 @@ export const HomeLayout = () => {
 
         <AppSidebar />
 
-        <SidebarInset>
+        <SidebarInset className="bg-background">
           
           <AppNavbar />
           <Toaster
