@@ -11,23 +11,25 @@ import {
   SidebarMenuSub,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { ChevronRight, Home, Info, LogOut, MessageSquareText, MessageSquareWarning, MessagesSquare, Pencil, Trash2 } from "lucide-react"
+import { ChevronRight, Home, Info, LogOut, MessageSquareText, MessageSquareWarning, MessagesSquare } from "lucide-react"
 import { ModeToggle } from "./mode-toggle"
 import { Link } from "react-router-dom"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible"
 import { useEffect, useState } from "react"
-import { useAppSelector } from "@/lib/store/hooks/hooks"
-import { getAllConversationForSideBar } from "@/services/conversation"
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks/hooks"
 import { toast } from "sonner"
 import { Button } from "../ui/button"
-import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@radix-ui/react-context-menu"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuContent, DropdownMenuItem } from '../ui/dropdown-menu';
-import { HiRectangleStack, HiUserCircle } from "react-icons/hi2"
+import { HiUserCircle } from "react-icons/hi2"
 import { logout } from "@/services/user"
 import { AppLogin } from "./app-login"
 import { AppSignup } from "./app-signup"
+import { Logo } from "./logo"
+import { getAndSetConversationListForSideBar } from "@/lib/store/features/conversation/consersationSlice"
 
 export function AppSidebar() {
+
+  const dispatch = useAppDispatch();
 
   const loggedInStatus = useAppSelector((state) => state.user.loggedInStatus);
   const userDetails = useAppSelector((state) => state.user.userDetails);
@@ -57,10 +59,7 @@ export function AppSidebar() {
     icon: MessageSquareWarning,
   }]);
 
-  const [conversations, setConversations] = useState<[{
-    title: string;
-    url: string;
-  }]>();
+  const conversations = useAppSelector(state => state.conversation.conversationList)
 
   useEffect(() => {
     if (loggedInStatus){
@@ -88,8 +87,7 @@ export function AppSidebar() {
     ])
 
     try {
-      const conversations = await getAllConversationForSideBar();
-      setConversations(conversations.data);
+      dispatch(getAndSetConversationListForSideBar());
     } catch (error : any) {
       return toast.error(error?.message || "Something went wrong!");
     }
@@ -98,7 +96,10 @@ export function AppSidebar() {
   const logoutHandler = async () => {
     try {
       const response = await logout();
-      if (response.success) window.location.reload();
+      if (response.success){
+        // toast.success(response.message || "Logged out!");
+        window.location.reload();
+      }
     } catch (error: any) {
       console.log('error', error)
       toast.error(error?.response?.data?.message || error?.message || 'Logout failed')
@@ -114,12 +115,7 @@ export function AppSidebar() {
 
           <SidebarGroupLabel className="h-14 border-b-2 border-border rounded-none !m-0 flex justify-between items-center">
             <SidebarTrigger className="md:hidden" />
-            <div className='flex justify-center items-center gap-2'>
-              <HiRectangleStack className='text-xl text-primary' />
-              <h1 className='text-xl font-geist-800 text-primary'>
-                HirePrep
-              </h1>
-            </div>
+              <Logo />
             <ModeToggle />
           </SidebarGroupLabel>
 
@@ -141,38 +137,13 @@ export function AppSidebar() {
                       <CollapsibleContent>
                         {
                           conversations && conversations.map((conversation) => {
-                            return <ContextMenu key={conversation.title}>
-                            <SidebarMenuSub key={conversation.title}>
+                            return <SidebarMenuSub key={conversation.title}>
                               <SidebarMenuButton asChild className="p-0">
-                                <ContextMenuTrigger className="relative w-full h-full">
-                                  <Link to={conversation.url} className="w-full h-full p-2">
-                                    <span>{conversation.title?.slice(0, 20) + (conversation.title.length>21 ? ".." : "")}</span>
-                                  </Link>
-                                </ContextMenuTrigger>
+                                <Link to={conversation.url} className="w-full h-full p-2">
+                                  <span>{conversation.title?.slice(0, 20) + (conversation.title.length>21 ? ".." : "")}</span>
+                                </Link>
                               </SidebarMenuButton>
-                            </SidebarMenuSub>
-                            <ContextMenuContent className="bg-background rounded-md p-1 z-10">
-                              <ContextMenuItem>
-                                <Button variant={"ghost"} className="w-full" size={"sm"} onClick={() => {
-                                  console.log('RENAME CLICKED', conversation)
-                                }}>
-                                  <Pencil />
-                                  Rename
-                                </Button>
-                              </ContextMenuItem>
-                              <ContextMenuItem>
-                                <Button variant={"ghost"} className="w-full" size={"sm"} onClick={() => {
-                                  console.log('DELETE CLICKED', conversation)
-                                  // instead of popup, it can directly delete in the worst case 
-                                  // since its will just update isDeleted to true
-                                  // and it will then deleted after 30 days (maybe using cronjob)
-                                }}>
-                                  <Trash2 />
-                                  Delete
-                                </Button>
-                              </ContextMenuItem>
-                            </ContextMenuContent>
-                          </ContextMenu>})
+                            </SidebarMenuSub>})
                         }
                       </CollapsibleContent>
                     </SidebarMenuItem>

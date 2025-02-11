@@ -52,8 +52,9 @@ export const Conversations = () => {
       })
       dispatch(setCurrentConversationChats(newConversation?.data?.chats))
       navigate(`${newConversation?.data?._id}`)
-    } catch (error) {
+    } catch (error: any) {
       console.log(error)
+      toast.error(error?.response?.data?.error?.message || error?.message || 'Unable to continue chat');
     }
 
   }
@@ -61,14 +62,13 @@ export const Conversations = () => {
   return (
     <div className='w-full flex flex-col justify-start items-center p-4'>
 
-      {/* TODO: can provide text while uploading to make waiting more user friendly */}
+      {/* TODO : can provide text while uploading to make waiting more user friendly */}
 
       {
         !imageUrl && !resumeContent &&
         <div className="min-h-[78vh] flex flex-col gap-3 justify-center items-center">
           <UploadCloudinary />
         </div>
-
       }
 
       {

@@ -4,6 +4,7 @@ import { BiLike, BiDislike } from "react-icons/bi";
 import { GrRefresh } from "react-icons/gr";
 import { MdContentCopy } from "react-icons/md";
 import { Card } from "../ui/card";
+import { HiRectangleStack } from "react-icons/hi2";
 
 interface MessageProps {
   content?: string;
@@ -39,18 +40,18 @@ export const Message = ({ content = "", feedback = false, goodFeedbackHandler, r
   }, [currentIndex, content]);
 
   return (
-    <div className="w-full flex justify-start items-start p-2 px-20">
+    <div className="w-full flex justify-start items-start px-40">
       
       {
         role === "model" || role === "ai" ?
         <>
-          <div className="flex items-center w-[5%] p-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-100 to-orange-700 shadow-2xl">
-
+          <div className="mt-5 flex justify-end items-end w-[5%]">
+            <div className="w-10 h-10 rounded-full bg-background border-2 border-primary/30 flex justify-center items-center shadow-2xl">
+              <HiRectangleStack className='text-xl text-primary' />
             </div>
           </div>
           <pre className="w-[95%]">
-            <Card className="rounded-md">
+            <Card className="rounded-md bg-background border-none shadow-none">
               <ReactMarkdown className="p-5 text-wrap font-geist">
                 {displayedContent}
               </ReactMarkdown>
@@ -77,15 +78,15 @@ export const Message = ({ content = "", feedback = false, goodFeedbackHandler, r
         </> :
         role === "user" ?
         <>
-          <pre className="w-full">
-            <Card className="bg-background border border-foreground-300 shadow-[4px_3px_0rem_0px] shadow-foreground-200">
+          <pre className="w-full flex justify-end items-end">
+            <Card className="w-[85%] bg-primary/5 border border-foreground-300 shadow-foreground-200">
               <ReactMarkdown className="p-5 text-wrap font-geist">
                 {displayedContent}
               </ReactMarkdown>
             </Card>
             {
               feedbackPopup ?
-              <div className="w-full text-wrap flex justify-between items-center gap-2 p-4">
+              <div className="w-[85%] text-wrap flex justify-between items-center gap-2 p-4">
 
                 <p className="flex justify-center items-center">
                   Please provide feedback, to 

@@ -24,6 +24,15 @@ export const conversationSchema = new Schema({
     type: String,
     trim: true,
   },
+  // TODO : can provide details about company for which user is applying + can analyze about the company using its website
+  // companyAppliedName: {
+  //   type: String,
+  //   trim: true,
+  // },
+  // companyAppliedWebsite: {
+  //   type: String,
+  //   trim: true,
+  // },
   aiModel: {
     type: String,
     default: '',
