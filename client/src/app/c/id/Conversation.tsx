@@ -1,16 +1,17 @@
 import { Message } from "@/components/custom/message";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { getConversationsChatById, continueConversation } from "@/services/conversation";
 import { messageSchema } from "@/validations/message";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
-import { RiSendPlaneFill } from "react-icons/ri";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { z } from "zod";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks/hooks";
 import { clearCurrentConversation, setCurrentConversation, setCurrentConversationChats } from "@/lib/store/features/conversation/consersationSlice";
+import { MessageInputBox } from "@/components/custom/message-inputbox";
+import { HiRectangleStack } from "react-icons/hi2";
+import { LoaderCircle } from "lucide-react";
+import { toast } from "sonner";
 
 export const Conversation = () => {
 
@@ -18,22 +19,39 @@ export const Conversation = () => {
 
   const { id } = useParams();
 
+  const chatEndRef = useRef<HTMLDivElement | null>(null);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const chats = useAppSelector((state) => state.conversation.currentConversation.chats);
 
   useEffect(() => {
     listConversation(id || "");
-    // FIX clear of redux
     return () => {
       dispatch(clearCurrentConversation());
+      window.scroll(0, 0);
     }
   }, [id])
+
+  // this moves to bottom when any new chat arrives
+  useEffect(() => {
+    // the setTimeout is used so that the chat ui is rendered completely and then it moves to the ref element
+    setTimeout(() => {
+      chatEndRef?.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100)
+  }, [chats])
+  
+  // this moves to bottom on page render
+  useEffect(() => {
+    setTimeout(() => {
+      chatEndRef?.current?.scrollIntoView({ behavior: "instant" });
+    }, 100)
+  }, [])
 
   const listConversation = async (id: string) => {
 
     try {
-      if (id != ""){
+      if (id != "") {
         const completeConversation = await getConversationsChatById({
           conversationId: id
         })
@@ -60,6 +78,8 @@ export const Conversation = () => {
   const onSubmit = async (e: z.infer<typeof messageSchema>) => {
     try {
 
+      setIsLoading(true);
+
       const history = chats.map((chat: any) => {
         return {
           "role": chat.sender,
@@ -68,6 +88,13 @@ export const Conversation = () => {
           }]
         }
       });
+
+      dispatch(setCurrentConversationChats([...chats, {
+        sender: "user",
+        text: e.message,
+      }]));
+
+      form.reset();
 
       const replyFromAi = await continueConversation({
         conversationId: id || "",
@@ -82,36 +109,46 @@ export const Conversation = () => {
         sender: "model",
         text: replyFromAi.data
       }]));
-      
-    } catch (error) {
+
+      setIsLoading(false);
+
+    } catch (error: any) {
       console.log(error);
+      toast.error(error?.response?.data?.error?.message || error?.message || "Unable to get reply from AI!")
     }
   }
 
   return (
-    <div className='w-full flex flex-col justify-start items-center p-4'>
+    <div className='w-full flex flex-col justify-start items-center px-4 pt-4'>
 
       {
-        chats.map((chat: any, index) => {
+        chats && chats.map((chat: any, index) => {
           return <Message content={chat.text} role={chat.sender} key={index} />
         })
       }
 
       {
-        chats &&
-        <form className="w-full px-10 max-h-48 flex justify-center items-center relative" onSubmit={form.handleSubmit(onSubmit)}>
-            
-          <Textarea
-            disabled={isLoading}
-            placeholder="Ask anything related to resume"
-            className="resize-none w-full flex justify-center items-center"
-            {...form.register("message")}
-          />
-          <Button className="absolute right-14 w-10 z-10 rounded-full" aria-label="Like" type="submit">
-            <RiSendPlaneFill size={19} />
-          </Button>
+        isLoading ?
+          <div className="w-full flex justify-start items-start px-40 pb-5">
+            <div className="mt-5 flex justify-end items-end w-[5%]">
+              <div className="w-10 h-10 rounded-full bg-background border-2 border-primary/30 flex justify-center items-center shadow-2xl">
+                <HiRectangleStack className='text-xl text-primary' />
+              </div>
+            </div>
+            <div className="mt-5 flex justify-end items-end w-[5%]">
+              <div className="w-10 h-10 rounded-full flex justify-center items-center">
+                <LoaderCircle className="animate-spin" />
+              </div>
+            </div>
+          </div> :
+          null
+      }
 
-        </form>
+      <div className="p-2" ref={chatEndRef} />
+
+      {
+        chats &&
+        <MessageInputBox form={form} onSubmit={onSubmit} isLoading={isLoading} />
       }
 
     </div>

@@ -95,10 +95,16 @@ const continueConversation = async (req: Req, res: Res) => {
   logger.info("Continue conversation");
 
   const { conversationId } = req.params;
-  const { history, message } = req.body;
+  const { history, message } = req.body; 
 
-  const replyFromAi = await continueChatUsingGemini(history, message);
+  let replyFromAi;
 
+  try {
+    replyFromAi = await continueChatUsingGemini(history, message);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(errorResponse(500, "Failed to continue conversation!"));
+  }
   const newUserChat = await Chat.create({
     sender: "user",
     text: message,

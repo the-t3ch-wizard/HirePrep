@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { getAllConversationForSideBar } from "@/services/conversation"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
   newChat: {
@@ -29,7 +30,13 @@ const initialState = {
     ],
     createdAt: '',
     updatedAt: '',
-  }
+  },
+  conversationList: [
+    {
+      title: '',
+      url: '',
+    }
+  ]
 }
 
 export const conversationSlice = createSlice({
@@ -54,9 +61,24 @@ export const conversationSlice = createSlice({
     setCurrentConversationChats: (state, action) => {
       state.currentConversation.chats = action.payload
     },
+    setConversationList: (state, action) => {
+      state.conversationList = action.payload
+    },
   }
 })
 
-export const { setNewChatUploadedResumeDetail, clearNewChatUploadedResumeDetail, setCurrentConversation, clearCurrentConversation, setCurrentConversationChats, setCurrentConversationId } = conversationSlice.actions;
+export const { setNewChatUploadedResumeDetail, clearNewChatUploadedResumeDetail, setCurrentConversation, clearCurrentConversation, setCurrentConversationChats, setCurrentConversationId, setConversationList } = conversationSlice.actions;
 
 export default conversationSlice.reducer;
+
+export const getAndSetConversationListForSideBar = createAsyncThunk(
+  "conversation/getConversationListForSideBar",
+  async (_, { dispatch }) => {
+    try {
+      const conversations = await getAllConversationForSideBar();
+      dispatch(setConversationList(conversations.data))
+    } catch (error) {
+      console.log(error);
+    }
+  }
+)

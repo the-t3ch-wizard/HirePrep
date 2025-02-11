@@ -34,7 +34,7 @@ export const HomeLayout = () => {
 
         <AppSidebar />
 
-        <SidebarInset>
+        <SidebarInset className="bg-background">
           
           <AppNavbar />
           <Toaster
