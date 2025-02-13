@@ -12,6 +12,7 @@ import { MessageInputBox } from "@/components/custom/message-inputbox";
 import { HiRectangleStack } from "react-icons/hi2";
 import { LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
+import { ChatSkeleton } from "@/components/custom/chat-skeleton";
 
 export const Conversation = () => {
 
@@ -22,6 +23,7 @@ export const Conversation = () => {
   const chatEndRef = useRef<HTMLDivElement | null>(null);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitialChatLoading, setIsInitialChatLoading] = useState(false);
 
   const chats = useAppSelector((state) => state.conversation.currentConversation.chats);
 
@@ -40,16 +42,9 @@ export const Conversation = () => {
       chatEndRef?.current?.scrollIntoView({ behavior: "smooth" });
     }, 100)
   }, [chats])
-  
-  // this moves to bottom on page render
-  useEffect(() => {
-    setTimeout(() => {
-      chatEndRef?.current?.scrollIntoView({ behavior: "instant" });
-    }, 100)
-  }, [])
 
   const listConversation = async (id: string) => {
-
+    setIsInitialChatLoading(true);
     try {
       if (id != "") {
         const completeConversation = await getConversationsChatById({
@@ -64,8 +59,9 @@ export const Conversation = () => {
       }
     } catch (error) {
       console.log(error)
+    } finally {
+      setIsInitialChatLoading(false)
     }
-
   }
 
   const form = useForm<z.infer<typeof messageSchema>>({
@@ -122,6 +118,10 @@ export const Conversation = () => {
     <div className='w-full flex flex-col justify-start items-center px-4 pt-4'>
 
       {
+        isInitialChatLoading ?
+        <>
+          <ChatSkeleton />
+        </> :
         chats && chats.map((chat: any, index) => {
           return <Message content={chat.text} role={chat.sender} key={index} />
         })

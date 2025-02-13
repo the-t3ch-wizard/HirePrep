@@ -8,6 +8,7 @@ import { clearCurrentConversation, setCurrentConversation } from "@/lib/store/fe
 import { ResumeSection } from "@/components/custom/resume-section"
 import { JobDescriptionSummary } from "@/components/custom/job-description-summary"
 import { ConversationBasicDetail } from "@/components/custom/conversation-basic-detail"
+import { AboutChatSkeleton } from "@/components/custom/about-chat-skeleton"
 
 export const AboutConversation = () => {
 
@@ -18,6 +19,8 @@ export const AboutConversation = () => {
   const dispatch = useAppDispatch();
 
   const conversationDetails = useAppSelector(state => state.conversation.currentConversation);
+
+  const [isInitialDataLoading, setIsInitialDataLoading] = useState(false);
 
   const [isEditingConversationTitle, setIsEditingConversationTitle] = useState(false);
   const [isEditingJobDetails, setIsEditingJobDetails] = useState(false);
@@ -46,7 +49,7 @@ export const AboutConversation = () => {
   }, [id])
 
   const listConversation = async (id: string) => {
-
+    setIsInitialDataLoading(true);
     try {
       if (id != "") {
         const conversationDetails = await getConversationDetails({
@@ -65,6 +68,8 @@ export const AboutConversation = () => {
       }
     } catch (error) {
       console.log(error)
+    } finally {
+      setIsInitialDataLoading(false);
     }
 
   }
@@ -72,18 +77,26 @@ export const AboutConversation = () => {
   return (
     <div className="container mx-auto p-2 md:p-4 md:space-y-6 space-y-2">
 
-      {/* conversation basic detail */}
-      <ConversationBasicDetail title={title} setTitle={setTitle} isEditingConversationTitle={isEditingConversationTitle} setIsEditingConversationTitle={setIsEditingConversationTitle} jobTitle={jobTitle} id={id} conversationCreatedAt={conversationCreatedAt} conversationUpdatedAt={conversationUpdatedAt} />
+      {
+        isInitialDataLoading ?
+        <>
+          <AboutChatSkeleton />
+        </> :
+        <>
+          {/* conversation basic detail */}
+          <ConversationBasicDetail title={title} setTitle={setTitle} isEditingConversationTitle={isEditingConversationTitle} setIsEditingConversationTitle={setIsEditingConversationTitle} jobTitle={jobTitle} id={id} conversationCreatedAt={conversationCreatedAt} conversationUpdatedAt={conversationUpdatedAt} />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 md:gap-4 gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-4 gap-2">
 
-        {/* resume section */}
-        <ResumeSection resumeUrl={resumeUrl} />
+            {/* resume section */}
+            <ResumeSection resumeUrl={resumeUrl} />
 
-        {/* job description summary */}
-        <JobDescriptionSummary id={id} jobTitle={jobTitle} setJobTitle={setJobTitle} jobDescription={jobDescription} setJobDescription={setJobDescription} isEditingJobDetails={isEditingJobDetails} setIsEditingJobDetails={setIsEditingJobDetails} />
+            {/* job description summary */}
+            <JobDescriptionSummary id={id} jobTitle={jobTitle} setJobTitle={setJobTitle} jobDescription={jobDescription} setJobDescription={setJobDescription} isEditingJobDetails={isEditingJobDetails} setIsEditingJobDetails={setIsEditingJobDetails} />
 
-      </div>
+          </div>
+        </>
+      }
 
       {/* AI Feedback Summary */}
       {/* <Card className="flex flex-col gap-2">
