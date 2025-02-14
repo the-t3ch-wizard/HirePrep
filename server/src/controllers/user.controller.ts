@@ -38,6 +38,8 @@ const signup = async (req : Req, res : Res) => {
     httpOnly: true,
     secure: true,
     sameSite: 'none',
+    domain: '.vercel.app',
+    path: "/",
   })
   // had to set options for token as per mode of server
 
@@ -79,6 +81,8 @@ const login = async (req : Req, res : Res) => {
     httpOnly: true,
     secure: true,
     sameSite: 'none',
+    domain: '.vercel.app',
+    path: "/",
   })
   // had to set options for token as per mode of server
 
@@ -126,6 +130,8 @@ const logout = async (req : Req, res : Res) => {
     httpOnly: true,
     secure: true,
     sameSite: 'none',
+    domain: '.vercel.app',
+    path: "/",
   })
   // had to set options for token as per mode of server
 
