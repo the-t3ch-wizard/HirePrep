@@ -29,7 +29,7 @@ app.get('/', asyncHandler((req: any, res: any) => {
 app.use("/api/v1/", rootRouter);
 
 app.use((req, res, next) => {
-  res.status(404).json(errorResponse(404, "Not Found"));
+  res.status(404).json(errorResponse(404, "Route Not Found"));
 });
 
 // error handler middleware
