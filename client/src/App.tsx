@@ -8,6 +8,7 @@ import { ContactUs } from './app/contact-us/ContactUs'
 import { useAppSelector } from './lib/store/hooks/hooks'
 import { NotFound } from './app/404-not-found/NotFound'
 import { AboutConversation} from './app/c/a/id/AboutConversation'
+import { AboutUser } from './app/a/id/AboutUser'
 
 function App() {
 
@@ -17,6 +18,8 @@ function App() {
     <Routes>
       <Route path="/" element={<HomeLayout />} >
         <Route path="" element={<Home />} />
+        <Route path="about-us" element={<AboutUs />} />
+        <Route path="contact-us" element={<ContactUs />} />
         {
           loggedInStatus ?
           <>
@@ -25,8 +28,8 @@ function App() {
             <Route path="c/:id" element={<Conversation />} />
             {/* a : about */}
             <Route path="c/a/:id" element={<AboutConversation />} />
-            <Route path="about-us" element={<AboutUs />} />
-            <Route path="contact-us" element={<ContactUs />} />
+
+            <Route path="a/:id" element={<AboutUser />} />
           </> :
           null
         }

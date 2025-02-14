@@ -7,7 +7,7 @@ import { months } from '@/lib/constants'
 import { renameConversationNameById } from '@/services/conversation'
 import { toast } from 'sonner'
 import { useAppDispatch } from '@/lib/store/hooks/hooks'
-import { getAndSetConversationListForSideBar } from '@/lib/store/features/conversation/consersationSlice'
+import { getAndSetConversationListForSideBar, setCurrentConversationName } from '@/lib/store/features/conversation/consersationSlice'
 
 export const ConversationBasicDetail = ({ title, setTitle, isEditingConversationTitle, setIsEditingConversationTitle, jobTitle, id, conversationCreatedAt, conversationUpdatedAt }: {
   title: string, setTitle: React.Dispatch<React.SetStateAction<string>>, isEditingConversationTitle: boolean, setIsEditingConversationTitle: React.Dispatch<React.SetStateAction<boolean>>, jobTitle: string, id: string | undefined, conversationCreatedAt: Date | null, conversationUpdatedAt: Date | null
@@ -22,6 +22,7 @@ export const ConversationBasicDetail = ({ title, setTitle, isEditingConversation
         conversationId: id || "",
         name: title
       })
+      dispatch(setCurrentConversationName(title));
       dispatch(getAndSetConversationListForSideBar());
       toast.success(renamedConversation.message || "Renamed conversation")
     } catch (error: any) {

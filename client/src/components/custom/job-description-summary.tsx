@@ -37,6 +37,7 @@ export const JobDescriptionSummary = ({ id, jobTitle, setJobTitle, jobDescriptio
               <Input
                 value={jobTitle}
                 onChange={(e) => setJobTitle(e.target.value)}
+                placeholder="Enter Job Title"
                 className="text-sm text-foreground"
               />
             ) : (
@@ -45,6 +46,7 @@ export const JobDescriptionSummary = ({ id, jobTitle, setJobTitle, jobDescriptio
             {isEditingJobDetails ? (
               <Textarea
                 value={jobDescription}
+                placeholder="Enter Job Description"
                 onChange={(e) => {
                   setJobDescription(e.target.value)
                   e.target.style.height = "auto";

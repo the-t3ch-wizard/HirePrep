@@ -58,6 +58,9 @@ export const conversationSlice = createSlice({
     clearCurrentConversation: (state) => {
       state.currentConversation = initialState.currentConversation
     },
+    setCurrentConversationName: (state, action) => {
+      state.currentConversation.name = action.payload
+    },
     setCurrentConversationChats: (state, action) => {
       state.currentConversation.chats = action.payload
     },
@@ -67,7 +70,7 @@ export const conversationSlice = createSlice({
   }
 })
 
-export const { setNewChatUploadedResumeDetail, clearNewChatUploadedResumeDetail, setCurrentConversation, clearCurrentConversation, setCurrentConversationChats, setCurrentConversationId, setConversationList } = conversationSlice.actions;
+export const { setNewChatUploadedResumeDetail, clearNewChatUploadedResumeDetail, setCurrentConversation, clearCurrentConversation, setCurrentConversationName, setCurrentConversationChats, setCurrentConversationId, setConversationList } = conversationSlice.actions;
 
 export default conversationSlice.reducer;
 
