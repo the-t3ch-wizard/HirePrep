@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { asyncHandler } from "../lib/utils";
+import { asyncHandler, successResponse } from "../lib/utils";
 import { user } from "../controllers/user.controller";
 import { upload } from "./upload/upload.routes";
 import conversationRoutes from "./conversation/conversation.routes";
@@ -7,6 +7,10 @@ import resumeRoutes from "./resume/resume.routes";
 import { authMiddleware } from "../middlewares/auth.middleware";
 
 const router = Router();
+
+router.get("/health-check", asyncHandler((req: any, res: any) => {
+  return res.status(200).json(successResponse(200, "Request successful", { message: "API is healthy!" }))
+}))
 
 router.post("/auth/signup", asyncHandler(user.signup))
 router.post("/auth/login", asyncHandler(user.login))
