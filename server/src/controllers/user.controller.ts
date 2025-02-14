@@ -34,7 +34,13 @@ const signup = async (req : Req, res : Res) => {
   }, env.JWTSECRETKEY, {
     expiresIn: "7d"
   })
-  res.cookie("authToken", token)
+  res.cookie("authToken", token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    domain: '.vercel.app',
+    path: "/",
+  })
   // had to set options for token as per mode of server
 
   return res.status(200).json(successResponse(200, "User signed up successfully", {
@@ -71,7 +77,13 @@ const login = async (req : Req, res : Res) => {
   }, env.JWTSECRETKEY, {
     expiresIn: "7d"
   })
-  res.cookie("authToken", token)
+  res.cookie("authToken", token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    domain: '.vercel.app',
+    path: "/",
+  })
   // had to set options for token as per mode of server
 
   return res.status(200).json(successResponse(200, "User logged in successfully", {
@@ -114,7 +126,13 @@ const whoAmI = async (req : Req, res: Res) => {
 const logout = async (req : Req, res : Res) => {
   logger.info("Logout user")
 
-  res.clearCookie("authToken")
+  res.clearCookie("authToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    domain: '.vercel.app',
+    path: "/",
+  })
   // had to set options for token as per mode of server
 
   return res.status(200).json(successResponse(200, "User logged out successfully", null))

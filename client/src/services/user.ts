@@ -23,7 +23,7 @@ export const whoAmiI = async () => {
 }
 
 export const logout = async () => {
-  const response = await axiosInstance.put(API_ENDPOINTS.LOGOUT, {}, {
+  const response = await axiosInstance.post(API_ENDPOINTS.LOGOUT, {}, {
     withCredentials: true,
   })
   return response.data;

@@ -10,7 +10,7 @@ const router = Router();
 
 router.post("/auth/signup", asyncHandler(user.signup))
 router.post("/auth/login", asyncHandler(user.login))
-router.put("/auth/logout", asyncHandler(user.logout))
+router.post("/auth/logout", asyncHandler(user.logout))
 router.get("/auth/who-am-i", asyncHandler(user.whoAmI))
 
 router.use(asyncHandler(authMiddleware));
