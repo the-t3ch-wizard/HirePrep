@@ -12,4 +12,5 @@ export const env = {
   CLOUDINARY_API_KEY: String(process.env.CLOUDINARY_API_KEY),
   CLOUDINARY_API_SECRET: String(process.env.CLOUDINARY_API_SECRET),
   GOOGLE_GENAI_API_KEY: String(process.env.GOOGLE_GENAI_API_KEY),
+  MONGODB_CONNECTION_URI: String(process.env.MONGODB_CONNECTION_URI),
 }
