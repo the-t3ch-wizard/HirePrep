@@ -3,10 +3,31 @@ import { createSlice } from "@reduxjs/toolkit"
 const initialState = {
   loggedInStatus: false,
   userDetails: {
-    id: null,
-    name: null,
-    email: null,
-  }
+    _id: undefined,
+    name: undefined,
+    email: undefined,
+    profileName: undefined,
+    imageUrl: undefined,
+    bio: undefined,
+    gender: undefined,
+    birthDate: undefined,
+    country: undefined,
+    userEducationalDetails: {
+      college: undefined,
+      degree: undefined,
+    },
+    socialMediaProfileList: {
+      linkedinUrl: undefined,
+      twitterUrl: undefined,
+      websiteUrl: undefined,
+      mailUrl: undefined,
+      resumeUrl: undefined,
+    },
+    profileVisibilityConfig: {
+      profileVisibility: undefined,
+    },
+    platformProfiles: [],
+  },
 }
 
 export const userSlice = createSlice({
@@ -20,7 +41,10 @@ export const userSlice = createSlice({
       state.loggedInStatus = false
     },
     setUserDetails: (state, action) => {
-      state.userDetails = action.payload;
+      state.userDetails = {
+        ...state.userDetails,
+        ...action.payload,
+      };
     },
     clearUserDetails: (state) => {
       state.userDetails = initialState.userDetails;

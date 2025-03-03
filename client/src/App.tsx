@@ -8,7 +8,8 @@ import { ContactUs } from './app/contact-us/ContactUs'
 import { useAppSelector } from './lib/store/hooks/hooks'
 import { NotFound } from './app/404-not-found/NotFound'
 import { AboutConversation} from './app/c/a/id/AboutConversation'
-import { AboutUser } from './app/a/id/AboutUser'
+import { UserProfile } from './app/p/id/UserProfile'
+import { EditUserProfile } from './app/p/edit/EditUserProfile'
 
 function App() {
 
@@ -29,7 +30,9 @@ function App() {
             {/* a : about */}
             <Route path="c/a/:id" element={<AboutConversation />} />
 
-            <Route path="a/:id" element={<AboutUser />} />
+            {/* profile */}
+            <Route path="p/:id" element={<UserProfile />} />
+            <Route path="p/edit" element={<EditUserProfile />} />
           </> :
           null
         }

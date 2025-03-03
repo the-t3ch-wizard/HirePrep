@@ -19,7 +19,7 @@ export const Conversations = () => {
 
   const imageUrl = useAppSelector(state => state.conversation.newChat.UploadedResumeDetail.imageUrl);
 
-  const userId = useAppSelector(state => state.user.userDetails.id);
+  const userId = useAppSelector(state => state.user.userDetails._id);
   
   const [resumeId, setResumeId] = useState("");
 
