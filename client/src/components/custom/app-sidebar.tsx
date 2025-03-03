@@ -187,7 +187,7 @@ export function AppSidebar() {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                     <DropdownMenuItem>
-                    <Link to={`/p/${userDetails.id}`} className="w-full flex gap-2 justify-start items-center">
+                    <Link to={`/p/${userDetails._id}`} className="w-full flex gap-2 justify-start items-center">
                       <HiUserCircle className=" w-4" />
                       Profile
                     </Link>
