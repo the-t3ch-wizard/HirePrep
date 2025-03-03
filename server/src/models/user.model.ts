@@ -250,6 +250,7 @@ const platformProfileSchema = new Schema({
 export const userSchema = new Schema({
   profileName: {
     type: String,
+    minlength: 6,
     unique: true,
   },
   name: {

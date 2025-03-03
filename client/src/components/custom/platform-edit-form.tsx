@@ -10,11 +10,11 @@ import { socialsSchema } from "@/validations/edit-user/socials";
 import { platformSchema } from "@/validations/edit-user/platform";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks/hooks";
-import { useEffect, useState } from "react";
-import { BadgeCheck, LoaderCircle } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { BadgeCheck, BadgeX, LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 import { responseType } from "@/types/api";
-import { updatePlatformProfileDetailForUser } from "@/services/user";
+import { checkPlatformProfileValidity, getPlatformProfilesOfUser, updatePlatformProfileDetailForUser } from "@/services/user";
 import { platformProfiles } from "@/lib/constants";
 import { setUserDetails } from "@/lib/store/features/user/userSlice";
 
@@ -50,22 +50,26 @@ export const PlatformEditForm = () => {
     },
   });
 
-  const [isLeetcodeLoading, setIsLeetcodeLoading] = useState<boolean | null>(null);
-  const [isGeeksforgeeksLoading, setIsGeeksforgeeksLoading] = useState<boolean | null>(null);
-
   const updatePlatformProfiles: SubmitHandler<z.infer<typeof platformSchema>> = async (
     data: z.infer<typeof platformSchema>
   ) => {
 
     try {
+
+      const promises: Promise<void | responseType>[] = [];
+
       if (data?.leetcode && data?.leetcode?.length > 0){
         try {
-          const responseOfLeetcodeProfile: Promise<void | responseType> = updatePlatformProfileDetailForUser(platformProfiles.leetcode, {
-            username: data?.leetcode
-          }).then((res) => {
-            toast.success("Updated leetcode profile successfully!")
-          })
+          promises.push( 
+            updatePlatformProfileDetailForUser(platformProfiles.leetcode, {
+              username: data?.leetcode
+            }).then((res) => {
+              toast.success("Updated leetcode profile successfully!")
+            })
+          );
         } catch (error: any) {
+          console.log(error);
+          
           toast.error(error?.response?.data?.message || "Unable to update leetcode profile");
         }
       }
@@ -77,14 +81,48 @@ export const PlatformEditForm = () => {
           toast.error(error?.response?.data?.message || "Unable to update geeksforgeeks profile");
         }
       }
+      await Promise.allSettled(promises);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Unable to update platform profile!")
     } finally {
-      // toast.success(response.message || "Updated platform profiles successfully!")
-      // an api inorder to fetch basic profile username from server and set it in redux
+
+      try {
+        const allPlatformProfiles = await getPlatformProfilesOfUser();
+        console.log(allPlatformProfiles?.data);
+        dispatch(setUserDetails(allPlatformProfiles?.data))
+      } catch (error: any) {
+        toast.error(error?.response?.data?.message || "Unable to get user's all platform profiles")
+      }
     }
 
   }
+  
+  const [isLeetcodeLoading, setIsLeetcodeLoading] = useState<boolean | null>(null);
+  const [isLeetcodeValid, setIsLeetcodeValid] = useState<boolean | null>(null);
+  const [isGeeksforgeeksLoading, setIsGeeksforgeeksLoading] = useState<boolean | null>(null);
+
+  const validateLeetcodeUsername = async (username: string) => {
+    try {
+      
+      const response = await checkPlatformProfileValidity(username, 0)
+      setIsLeetcodeLoading(false);
+      if (response?.data?.validity) setIsLeetcodeValid(true)
+      else setIsLeetcodeValid(false)
+      
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Unable to validate leetcode username!")
+    }
+  }
+
+  const validateLeetcodeUsernameCallback = useCallback(() => {
+    setIsLeetcodeLoading(true);
+    
+    const validationTimeout = setTimeout(() => {
+      validateLeetcodeUsername(platformForm.watch("leetcode") || "")
+    }, 1000)
+
+    return () => clearTimeout(validationTimeout);
+  }, [platformForm.watch("leetcode")])
 
   return (
     <div className="w-full flex flex-col gap-3 justify-start items-start px-4">
@@ -110,7 +148,7 @@ export const PlatformEditForm = () => {
               <FormItem className="w-[70%]">
                 <FormLabel>Leetcode</FormLabel>
                 <FormControl>
-                  <Input placeholder="AyushMaurya" {...field} />
+                  <Input placeholder="AyushMaurya" {...field} onChangeCapture={validateLeetcodeUsernameCallback} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -118,7 +156,7 @@ export const PlatformEditForm = () => {
           />
           <div className="w-[20%] h-9 flex justify-start items-center">
             {
-              isLeetcodeLoading === true ? <LoaderCircle className='text-green-500 animate-spin' /> : isLeetcodeLoading === false ? <BadgeCheck className="text-green-500" /> : null
+              isLeetcodeLoading === true ? <LoaderCircle className='text-green-500 animate-spin' /> : isLeetcodeLoading === false && isLeetcodeValid === true ? <BadgeCheck className="text-green-500" /> : isLeetcodeLoading === false && isLeetcodeValid === false ? <BadgeX className="text-red-500" /> : null
             }
           </div>
         </div>
@@ -140,6 +178,7 @@ export const PlatformEditForm = () => {
           />
           <div className="w-[20%] h-9 flex justify-start items-center">
             {
+              // FIX same as above leetcode this has to fixed
               isGeeksforgeeksLoading === true ? <LoaderCircle className='text-green-500 animate-spin' /> : isGeeksforgeeksLoading === false ? <BadgeCheck className="text-green-500" /> : null
             }
           </div>
