@@ -115,7 +115,7 @@ const whoAmI = async (req : Req, res: Res) => {
   }
 
   return res.status(200).json(successResponse(200, "User details fetched successfully", {
-    id: decoded?.id,
+    _id: decoded?.id,
     name: decoded?.name,
     email: decoded?.email,
   }))
@@ -177,6 +177,18 @@ const checkPlatformProfileValidity = async (req: Req, res: Res) => {
   return res.status(200).json(successResponse(200, "Checked platform profile validity successfully", {
     validity
   }))
+}
+
+const getPlatformProfilesOfUser = async (req: Req, res: Res) => {
+  logger.info("Get platform profiles of user")
+
+  const userId = req.user?.userId;
+
+  const platformProfiles = await User.findOne({
+    _id: userId
+  }).select('platformProfiles.platform platformProfiles.platformCode platformProfiles.userStats.username')
+
+  return res.status(200).json(successResponse(200, "Updated platform profile detail for user successfully", platformProfiles))
 }
 
 const updatePlatformProfileDetailForUser = async (req: Req, res: Res) => {
@@ -330,22 +342,39 @@ export const updatePasswordForUser = async (req: Req, res: Res) => {
   return res.status(200).json(successResponse(200, "Updated account information successfully", null));
 };
 
-// export const updatePlatformProfilesForUser = async (req: Req, res: Res) => {
-//   const userId = req.user?.userId;
-//   const { leetcode, geeksforgeeks } = req.body;
-//   const updatedUser = await User.findByIdAndUpdate(
-//     userId,
-//     {
-//       platformProfiles: [
-//         { platformCode: 0, platform: "leetcode", "userStats.username": leetcode },
-//         { platformCode: 1, platform: "geeksforgeeks", "userStats.username": geeksforgeeks },
-//       ],
-//     },
-//     { new: true }
-//   );
-//   if (!updatedUser) return res.status(404).json(errorResponse(404, "User not found"));
-//   return res.status(200).json(successResponse(200, "Updated platform profiles successfully", updatedUser));
-// };
+export const checkProfileNameValidity = async (req: Req, res: Res) => {
+  logger.info("Check profile name validity")
+
+  const userId = req.user?.userId;
+
+  const { profileName } = req.params;
+
+  if (!profileName) return res.status(400).json(errorResponse(400, "Profile name is required"))
+  else if (profileName && profileName.length < 6) return res.status(400).json(errorResponse(400, "Profile name should be atleast 6 characters long"))
+
+  const userWithSameProfileName = await User.findOne({
+    profileName
+  }).select('_id');
+
+  return res.status(200).json(successResponse(200, "Checked profile name validity successfully", {
+    validity: userWithSameProfileName?._id ? false : true
+  }));
+};
+
+export const updateProfileName = async (req: Req, res: Res) => {
+  logger.info("Update profile name")
+
+  const userId = req.user?.userId;
+  const { profileName } = req.params;
+  
+  const updatedUser = await User.findByIdAndUpdate(userId, {
+    profileName: profileName
+  }, {
+    new: true,
+  }).select('profileName')
+
+  return res.status(200).json(successResponse(200, "Updated account information successfully", updatedUser));
+};
 
 export const user = {
   signup,
@@ -355,10 +384,14 @@ export const user = {
   getUserDetails,
   
   checkPlatformProfileValidity,
+  getPlatformProfilesOfUser,
   updatePlatformProfileDetailForUser,
 
   updateBasicInfoForUser,
   updateSocialsForUser,
   updateProfileVisibilityForUser,
   updatePasswordForUser,
+
+  checkProfileNameValidity,
+  updateProfileName,
 }

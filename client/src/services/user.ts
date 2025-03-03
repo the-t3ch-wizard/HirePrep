@@ -34,6 +34,11 @@ export const getUserDetail = async () => {
   return response.data;
 }
 
+export const checkPlatformProfileValidity = async (username: string, platformCode: number) => {
+  const response = await axiosInstance.get(API_ENDPOINTS.CHECK_PLATFORM_PROFILE_VALIDITY + `/?username=${username}&platformCode=${platformCode}`)
+  return response.data;
+}
+
 export const updatePlatformProfileDetailForUser = async (code: Number, payload: any) => {
   const response = await axiosInstance.put(API_ENDPOINTS.USER_PLATFORM_PROFILE + `/${code}`, payload)
   return response.data;
@@ -56,5 +61,20 @@ export const updateProfileVisibilityForUser = async (payload: any) => {
 
 export const updatePasswordForUser = async (payload: any) => {
   const response = await axiosInstance.patch(API_ENDPOINTS.USER_PASSWORD, payload)
+  return response.data;
+}
+
+export const getPlatformProfilesOfUser = async () => {
+  const response = await axiosInstance.get(API_ENDPOINTS.PLATFORM_PROFILES)
+  return response.data;
+}
+
+export const checkProfileNameValidity = async (profileName: string) => {
+  const response = await axiosInstance.get(API_ENDPOINTS.CHECK_PROFILE_NAME_VALIDITY + `/${profileName}`)
+  return response.data;
+}
+
+export const updateProfileNameOfUser = async (profileName: string) => {
+  const response = await axiosInstance.patch(API_ENDPOINTS.PROFILE_NAME + `/${profileName}`)
   return response.data;
 }

@@ -13,6 +13,11 @@ const API_ENDPOINTS = {
   USER_PASSWORD: "/user/password",
   USER_PLATFORM_PROFILE: "/user/platform-profile",
   
+  PLATFORM_PROFILES: "/user/platform-profiles",
+  CHECK_PLATFORM_PROFILE_VALIDITY: "/user/check-platform-profile-validity",
+  CHECK_PROFILE_NAME_VALIDITY: "/user/check-profile-name-validity",
+  PROFILE_NAME: "/user/profile-name",
+
   EXTRACT_AND_CREATE_RESUME: "/resume/extract-and-create",
 
   GET_ALL_CONVERSATION: "/conversation",
