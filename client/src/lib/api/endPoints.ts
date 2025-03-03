@@ -5,6 +5,14 @@ const API_ENDPOINTS = {
   LOGOUT: "/auth/logout",
   WHO_AM_I: "/auth/who-am-i",
 
+  USER_DETAILS: "/user/details",
+
+  USER_BASIC_INFO: "/user/basic-info",
+  USER_SOCIALS: "/user/socials",
+  USER_PROFILE_VISIBILITY: "/user/profile-visibility",
+  USER_PASSWORD: "/user/password",
+  USER_PLATFORM_PROFILE: "/user/platform-profile",
+  
   EXTRACT_AND_CREATE_RESUME: "/resume/extract-and-create",
 
   GET_ALL_CONVERSATION: "/conversation",

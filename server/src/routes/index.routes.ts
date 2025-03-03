@@ -5,6 +5,7 @@ import { upload } from "./upload/upload.routes";
 import conversationRoutes from "./conversation/conversation.routes";
 import resumeRoutes from "./resume/resume.routes";
 import { authMiddleware } from "../middlewares/auth.middleware";
+import userRoutes from "./user/user.routes";
 
 const router = Router();
 
@@ -25,5 +26,7 @@ router.use(asyncHandler(authMiddleware));
 router.use("/resume", resumeRoutes)
 // router.use("/chat", )
 router.use("/conversation", conversationRoutes)
+
+router.use("/user", userRoutes)
 
 export default router;

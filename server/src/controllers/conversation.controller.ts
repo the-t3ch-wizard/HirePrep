@@ -1,10 +1,11 @@
 import { Req, Res } from "./../types/types";
 import { logger } from "../lib/logger"
-import { continueChatUsingGemini, errorResponse, successResponse } from "../lib/utils"
+import { errorResponse, successResponse } from "../lib/utils"
 import { Conversation } from "../models/conversation.model";
 import { Chat } from "../models/chat.model";
 import { Resume } from "../models/resume.model";
 import mongoose from "mongoose";
+import { continueChatUsingGemini } from "../lib/api/gemini";
 
 const getAllConversationForSideBar = async (req: Req, res: Res) => {
   // fetches basic conversation data for sidebar
